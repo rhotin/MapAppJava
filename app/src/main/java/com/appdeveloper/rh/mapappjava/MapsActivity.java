@@ -1,5 +1,6 @@
 package com.appdeveloper.rh.mapappjava;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     float zoom = 15;
     Marker currentMarker;
+    Polygon polygon;
     EditText locSearch;
     Button searchBtn;
 
@@ -99,6 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
                 if (currentMarker != null) {
                     currentMarker.remove();
+                    polygon.remove();
                 }
                 currentMarker = showMarker(location, latLng);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -110,7 +115,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public Marker showMarker(String location, LatLng latLng) {
+        showPolygon(latLng);
         return mMap.addMarker(new MarkerOptions().position(latLng).title(location)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
+    }
+
+    public Polygon showPolygon(LatLng latLng){
+        // Instantiates a new Polygon object and adds points to define a star
+        PolygonOptions starOptions = new PolygonOptions()
+                .add(new LatLng(latLng.latitude + 0.001, latLng.longitude - 0.003),
+                        new LatLng(latLng.latitude + 0.001, latLng.longitude + 0.003),
+                        new LatLng(latLng.latitude - 0.002, latLng.longitude - 0.002),
+                        new LatLng(latLng.latitude + 0.0025, latLng.longitude - 0.000),
+                        new LatLng(latLng.latitude - 0.002, latLng.longitude + 0.002),
+                        new LatLng(latLng.latitude + 0.001, latLng.longitude - 0.003))
+                .strokeColor(Color.YELLOW);
+
+        return mMap.addPolygon(starOptions);
     }
 }
