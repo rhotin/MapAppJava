@@ -115,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public Marker showMarker(String location, LatLng latLng) {
-        showPolygon(latLng);
+        polygon = showPolygon(latLng);
         return mMap.addMarker(new MarkerOptions().position(latLng).title(location)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pin)));
     }
